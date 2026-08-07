@@ -8,20 +8,20 @@ export const SITE = {
    *  `<html lang>`, date formatting, and the RSS feed language. Dictionaries
    *  ship for `en` and `ja`; regional variants like `en-GB` reuse the base
    *  language's strings while keeping their own date format. */
-  locale: 'en',
+  locale: 'zh',
   /** Site name — used in the header brand, <title>, and og:site_name. */
   title: '梦地秘境',
   /** Default meta description for pages that don't set their own. */
-  description: 'A minimal, neutral, and modern portfolio and blog theme for Astro.',
+  description: 'MirrorsAriah\' personal photography portfolio.',
   /** Description of the RSS feed at /rss.xml. */
-  rssDescription: 'Notes, essays, and release logs from Astro Keel.',
+  rssDescription: 'Notes, essays, and release logs from MirrorsAriah.',
   /** Default social share image, relative to the site root (see public/). */
   ogImage: '/og.jpg',
   /** Post author, emitted in JSON-LD BlogPosting structured data.
    *  Leave empty ('') to omit the author field. */
   author: 'MirrorsAriah',
   /** Footer credit line. */
-  footerText: 'Built with Astro Keel.',
+  footerText: '© 2026 Mirrors Ariah. All rights reserved.',
 } as const;
 
 /** Icons bundled with the theme — see `src/components/SocialLinks.astro`. */
@@ -38,7 +38,7 @@ export interface SocialLink {
 /** Social profiles rendered as inline SVG icons in the footer.
  *  Add or remove entries here — no template edits needed. */
 export const SOCIAL_LINKS: readonly SocialLink[] = [
-  { label: 'GitHub', href: 'https://github.com/kpab/astro-keel', icon: 'github' },
+  { label: 'GitHub', href: 'https://github.com/MirrorsAriah', icon: 'github' },
   { label: 'RSS feed', href: '/rss.xml', icon: 'rss' },
 ];
 

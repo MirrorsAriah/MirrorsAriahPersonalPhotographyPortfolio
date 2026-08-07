@@ -41,3 +41,21 @@ collections:
       - { label: "描述", name: "description", widget: "text", required: false }
       - { label: "草稿", name: "draft", widget: "boolean", default: false }
       - { label: "正文", name: "body", widget: "markdown" }
+  - name: "projects"
+    label: "项目作品"
+    folder: "src/content/projects"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "标题", name: "title", widget: "string" }
+      - { label: "描述", name: "description", widget: "text" }
+      - { label: "缩略图", name: "thumbnail", widget: "image", required: false }
+      - label: "技术栈"
+        name: "tech"
+        widget: "list"
+        required: false
+        field: { label: "技术", name: "techItem", widget: "string" }
+      - { label: "项目链接", name: "link", widget: "string", required: false }
+      - { label: "仓库链接", name: "repo", widget: "string", required: false }
+      - { label: "排序", name: "order", widget: "number", required: false, value_type: "int" }
+      - { label: "发布日期", name: "publishDate", widget: "datetime" }
