@@ -12,9 +12,9 @@ export const SITE = {
   /** Site name — used in the header brand, <title>, and og:site_name. */
   title: '梦地秘境',
   /** Default meta description for pages that don't set their own. */
-  description: 'MirrorsAriah\' personal photography portfolio.',
+  description: 'MirrorsAriah 的个人作品集。',
   /** Description of the RSS feed at /rss.xml. */
-  rssDescription: 'Notes, essays, and release logs from MirrorsAriah.',
+  rssDescription: 'MirrorsAriah 的笔记、文章和发布日志。',
   /** Default social share image, relative to the site root (see public/). */
   ogImage: '/og.jpg',
   /** Post author, emitted in JSON-LD BlogPosting structured data.
