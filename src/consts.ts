@@ -1,4 +1,4 @@
-// Site-wide settings. Edit this file to rebrand the theme — every page,
+88// Site-wide settings. Edit this file to rebrand the theme — every page,
 // the RSS feed, and Open Graph tags read from here.
 
 import type { UIKey } from './i18n/en';
@@ -10,7 +10,7 @@ export const SITE = {
    *  language's strings while keeping their own date format. */
   locale: 'en',
   /** Site name — used in the header brand, <title>, and og:site_name. */
-  title: 'Astro Keel',
+  title: '梦地秘境',
   /** Default meta description for pages that don't set their own. */
   description: 'A minimal, neutral, and modern portfolio and blog theme for Astro.',
   /** Description of the RSS feed at /rss.xml. */
@@ -19,7 +19,7 @@ export const SITE = {
   ogImage: '/og.jpg',
   /** Post author, emitted in JSON-LD BlogPosting structured data.
    *  Leave empty ('') to omit the author field. */
-  author: 'Astro Keel',
+  author: 'MirrorsAriah',
   /** Footer credit line. */
   footerText: 'Built with Astro Keel.',
 } as const;
