@@ -16,7 +16,7 @@
 // Note: values are deliberately *not* `as const` — widening them to `string`
 // is what lets other locales satisfy `UIStrings`.
 
-export const en = {
+export const zh = {
   // 页眉、页脚及其他界面外框元素
   'nav.home': '主页',
   'nav.about': '关于',
@@ -126,7 +126,7 @@ export const en = {
 };
 
 /** The shape every dictionary must implement. */
-export type UIStrings = typeof en;
+export type UIStrings = typeof zh;
 
 /** Every valid translation key. */
 export type UIKey = keyof UIStrings;
