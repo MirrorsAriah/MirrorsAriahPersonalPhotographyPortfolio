@@ -1,0 +1,17 @@
+﻿
+
+ProcessId   : 13828
+CommandLine : "C:\Users\Iris\.workbuddy\binaries\node\versions\22.22.2\node.exe
+              "  "C:\Users\Iris\.workbuddy\plugins\cache\workbuddy-builtin\weix
+              inpay\1.5.111/dist/mcp-server.mjs"
+
+ProcessId   : 19416
+CommandLine : 
+
+ProcessId   : 15460
+CommandLine : "C:\Users\Iris\.workbuddy\binaries\node\versions\22.22.2\node.exe
+              "  "C:\Users\Iris\.workbuddy\plugins\cache\workbuddy-builtin\weix
+              inpay\1.5.111/dist/mcp-server.mjs"
+
+
+

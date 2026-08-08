@@ -87,22 +87,24 @@ const isActive = (href: string) => {
   </head>
   <body>
     <header class="site-header">
-      <a class="brand" href={withBase('/')} aria-label={t('nav.brandHome', { site: siteName })}>
-        <span class="brand-mark" aria-hidden="true"></span>
-        <span>{siteName}</span>
-      </a>
-      <nav class="site-nav" aria-label={t('nav.label')}>
-        {
-          NAV_ITEMS.map((item) => (
-            <a href={withBase(item.href)} aria-current={isActive(item.href) ? 'page' : undefined}>
-              {navLabel(item)}
-            </a>
-          ))
-        }
-      </nav>
-      <button class="theme-toggle" type="button" aria-label={t('theme.toggle')} data-theme-toggle>
-        <span aria-hidden="true"></span>
-      </button>
+      <div class="site-header-inner">
+        <a class="brand" href={withBase('/')} aria-label={t('nav.brandHome', { site: siteName })}>
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span>{siteName}</span>
+        </a>
+        <nav class="site-nav" aria-label={t('nav.label')}>
+          {
+            NAV_ITEMS.map((item) => (
+              <a href={withBase(item.href)} aria-current={isActive(item.href) ? 'page' : undefined}>
+                {navLabel(item)}
+              </a>
+            ))
+          }
+        </nav>
+        <button class="theme-toggle" type="button" aria-label={t('theme.toggle')} data-theme-toggle>
+          <span aria-hidden="true"></span>
+        </button>
+      </div>
     </header>
 
     <main>

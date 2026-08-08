@@ -5,6 +5,8 @@ import sitemap from '@astrojs/sitemap';
 import { unified } from '@astrojs/markdown-remark';
 import { remarkReadingTime } from './remark-reading-time.mjs';
 
+import tailwindcss from '@tailwindcss/vite';
+
 // https://astro.build/config
 export default defineConfig({
   // Change to your deployed URL. Used for sitemap, canonical, and RSS links.
@@ -12,8 +14,10 @@ export default defineConfig({
   // is the repository name. Drop `base` (or set it to '/') for a custom domain
   // or a `<user>.github.io` root site.
   site: 'https://kpab.github.io',
+
   base: '/',
   integrations: [mdx(), sitemap()],
+
   markdown: {
     processor: unified({
       remarkPlugins: [remarkReadingTime],
@@ -28,5 +32,9 @@ export default defineConfig({
       defaultColor: false,
       wrap: true,
     },
+  },
+
+  vite: {
+    plugins: [tailwindcss()],
   },
 });

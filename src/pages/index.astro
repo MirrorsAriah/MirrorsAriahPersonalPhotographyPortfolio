@@ -4,20 +4,23 @@ import StructuredData from '../components/StructuredData.astro';
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import { withBase } from '../lib/url';
-import { SITE } from '../consts';
+import { SITE, SOCIAL_LINKS } from '../consts';
 import { formatDate, t } from '../i18n';
+import '../styles/home.css';
 
+// 作品：按日期+order 排序，取最多 9 条用于杂志网格
 const works = (await getCollection('works'))
   .sort((a, b) => {
     const byDate = b.data.publishDate.getTime() - a.data.publishDate.getTime();
     return byDate || (a.data.order ?? 999) - (b.data.order ?? 999);
   })
-  .slice(0, 3);
+  .slice(0, 9);
 
+// 博客：最新 4 条用于 Field notes
 const posts = (await getCollection('blog'))
   .filter((post) => !post.data.draft)
   .sort((a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime())
-  .slice(0, 3);
+  .slice(0, 4);
 
 const site = Astro.site ?? new URL(Astro.url.origin);
 const websiteSchema = {
@@ -27,114 +30,368 @@ const websiteSchema = {
   description: SITE.description,
   url: new URL(withBase('/'), site).href,
 };
+
+// 联系区社交：过滤出非 RSS 的可展示项
+const contactSocials = SOCIAL_LINKS.filter((s) => s.icon !== 'rss');
+// 联系邮箱（占位，可替换为真实地址）
+const contactEmail = 'mirrorsariah@gmail.com';
 ---
 
 <BaseLayout description={SITE.description}>
   <StructuredData slot="head" schema={websiteSchema} />
-  <section class="hero section">
-    <p class="eyebrow">Portfolio / writing / systems notes</p>
-    <h1>Structural minimalism for careful digital work.</h1>
-    <p class="lead">
-      Astro Keel gives projects, essays, and professional notes a disciplined frame: editorial type,
-      measured rhythm, and a single accent carried through fine structural rules.
-    </p>
-    <div class="action-row" aria-label={t('home.primaryLinks')}>
-      <a class="button" href={withBase('/works/')}>{t('home.viewWorks')}</a>
-      <a class="text-link" href={withBase('/blog/')}>{t('home.readNotes')}</a>
-    </div>
-  </section>
+  <link slot="head" rel="preconnect" href="https://fonts.googleapis.com" />
+  <link slot="head" rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link slot="head" href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <div class="home">
+    <div class="pf-cursor" id="pf-cursor" aria-hidden="true"></div>
 
-  <section class="section split-overview" aria-label={t('home.overviewLabel')}>
-    <div>
-      <p class="eyebrow">Principles</p>
-      <h2>Readable first, decorative last.</h2>
-    </div>
-    <div class="feature-list">
-      <article>
-        <h3>Baseline rhythm</h3>
-        <p>Vertical spacing follows a steady cadence for long-form reading.</p>
-      </article>
-      <article>
-        <h3>Typed content</h3>
-        <p>Collections are prepared for project case studies and durable notes.</p>
-      </article>
-      <article>
-        <h3>Keel lines</h3>
-        <p>Fine rules create structure without relying on decorative effects.</p>
-      </article>
-    </div>
-  </section>
-
-  <section class="section index-feed" aria-labelledby="latest-works">
-    <div class="section-heading">
-      <p class="eyebrow">{t('home.latestWorksEyebrow')}</p>
-      <h2 id="latest-works">Built records.</h2>
-      <a class="text-link" href={withBase('/works/')}>{t('home.allWorks')}</a>
-    </div>
-
-    {
-      works.length > 0 ? (
-        <div class="highlight-grid">
-          {works.map((work) => (
-            <article class="highlight-card">
-              {work.data.thumbnail && (
-                <Image src={work.data.thumbnail} alt="" width={720} height={480} loading="lazy" />
-              )}
-              <div>
-                <p class="meta">{formatDate(work.data.publishDate, 'short')}</p>
-                <h3>
-                  <a href={withBase(`/works/${work.id}/`)}>{work.data.title}</a>
-                </h3>
-                <p>{work.data.description}</p>
-                {work.data.tech.length > 0 && (
-                  <ul class="tag-list" aria-label={t('home.workTech', { title: work.data.title })}>
-                    {work.data.tech.slice(0, 4).map((tech) => (
-                      <li>{tech}</li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            </article>
-          ))}
+    {/* ============ Hero ============ */}
+    <header class="relative h-[91.5vh] min-h-[640px] flex items-center pt-0 pb-10 px-6 md:px-12">
+      <div class="max-w-[1400px] mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        {/* 左侧文字 */}
+        <div class="lg:col-span-7 relative z-10">
+          <div class="flex items-center gap-3 mb-8 text-xs tracking-[.25em] uppercase text-[var(--color-muted)]">
+            <span class="w-12 h-px bg-[var(--color-accent)]"></span>
+            <span>Personal Photography Portfolio</span>
+          </div>
+          <h1 class="pf-hero-title">
+            <span class="pf-reveal"><span style="animation-delay:.1s">Capturing</span></span><br>
+            <span class="pf-reveal"><span style="animation-delay:.25s; font-style: italic;">light,</span></span>
+            <span class="pf-reveal"><span style="animation-delay:.4s">silence</span></span><br>
+            <span class="pf-reveal"><span style="animation-delay:.55s">&amp; </span></span>
+            <span class="pf-reveal"><span style="animation-delay:.7s; color: var(--color-accent);">moments.</span></span>
+          </h1>
+          <p class="mt-6 max-w-md text-[var(--color-muted)] leading-relaxed pf-fade">
+            兴趣使然的摄影师，专注人文纪实与自然/城市风光。偏爱用镜头记录那些由人类创造但唯独没有人类存在其中的景观。相信好的影像是"被发现"的，而非"被拍摄"的。
+          </p>
+          <div class="mt-8 flex flex-wrap gap-10 pf-fade">
+            <div>
+              <div class="pf-serif text-4xl"><span class="italic text-[var(--color-accent)]">02</span></div>
+              <div class="text-[10px] text-[var(--color-muted)] mt-1 tracking-[.25em]">YEARS</div>
+            </div>
+            <div>
+              <div class="pf-serif text-4xl"><span class="italic text-[var(--color-accent)]">23</span></div>
+              <div class="text-[10px] text-[var(--color-muted)] mt-1 tracking-[.25em]">COUNTRIES</div>
+            </div>
+            <div>
+              <div class="pf-serif text-4xl"><span class="italic text-[var(--color-accent)]">142</span></div>
+              <div class="text-[10px] text-[var(--color-muted)] mt-1 tracking-[.25em]">PROJECTS</div>
+            </div>
+          </div>
         </div>
-      ) : (
-        <div class="empty-state compact">
-          <p set:html={t('home.worksEmpty')} />
+        {/* 右侧肖像（占位图，可替换为真实肖像） */}
+        <div class="lg:col-span-5 relative pf-fade pf-portrait">
+          <div class="aspect-[4/5] max-w-md mx-auto lg:ml-auto overflow-hidden">
+            <!-- <img src={withBase('/og.jpg')} class="w-full h-full object-cover" alt="肖像" /> -->
+            <Image src={withBase('/og.jpg')} alt="肖像" width={1200} height={630} class="w-full h-full object-cover" />
+          </div>
+          <div class="absolute -bottom-4 -left-2 lg:-left-12 bg-[var(--color-bg)] px-5 py-3 border-l-2 border-[var(--color-accent)]">
+            <div class="text-[10px] text-[var(--color-muted)] tracking-[.25em]">EST.</div>
+            <div class="pf-serif text-xl">2026</div>
+          </div>
         </div>
-      )
-    }
-  </section>
+      </div>
+      <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3">
+        <span class="text-[10px] tracking-[.3em] uppercase text-[var(--color-muted)]">Scroll</span>
+        <div class="pf-scroll-hint"></div>
+      </div>
+    </header>
 
-  <section class="section index-feed" aria-labelledby="latest-notes">
-    <div class="section-heading">
-      <p class="eyebrow">{t('home.latestBlogEyebrow')}</p>
-      <h2 id="latest-notes">Field notes.</h2>
-      <a class="text-link" href={withBase('/blog/')}>{t('home.allPosts')}</a>
+    {/* ============ 跑马灯 ============ */}
+    <div class="pf-marquee py-6 border-y border-[var(--color-line)] bg-[var(--color-soft)]">
+      <div class="pf-marquee-track pf-serif text-3xl md:text-5xl italic font-light">
+        <span class="mx-8">兴趣使然的摄影师</span>
+        <span class="mx-8 text-[var(--color-accent)]">✦</span>
+        <span class="mx-8">人文 · 风光 · 纪实</span>
+        <span class="mx-8 text-[var(--color-accent)]">✦</span>
+        <span class="mx-8">胶片摄影</span>
+        <span class="mx-8 text-[var(--color-accent)]">✦</span>
+        <span class="mx-8">坐标中国海南</span>
+        <span class="mx-8 text-[var(--color-accent)]">✦</span>
+        <span class="mx-8">人文 · 风光 · 纪实</span>
+        <span class="mx-8 text-[var(--color-accent)]">✦</span>
+        <span class="mx-8">坐标中国海南</span>
+        <span class="mx-8 text-[var(--color-accent)]">✦</span>
+      </div>
     </div>
 
-    {
-      posts.length > 0 ? (
-        <div class="note-list">
-          {posts.map((post) => (
-            <article class="note-row">
-              {post.data.heroImage && (
-                <Image src={post.data.heroImage} alt="" width={320} height={220} loading="lazy" />
-              )}
-              <div>
-                <p class="meta">{formatDate(post.data.publishDate, 'short')}</p>
-                <h3>
-                  <a href={withBase(`/blog/${post.id}/`)}>{post.data.title}</a>
-                </h3>
-                <p>{post.data.description}</p>
-              </div>
-            </article>
-          ))}
+    {/* ============ About ============ */}
+    <section id="about" class="py-24 md:py-32 px-6 md:px-12">
+      <div class="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <div class="lg:col-span-4">
+          <div class="lg:sticky lg:top-32">
+            <div class="text-xs tracking-[.3em] uppercase text-[var(--color-accent)] mb-4">— About</div>
+            <h2 class="pf-serif text-5xl md:text-6xl leading-tight">A quiet<br><span class="italic">discoverer.</span></h2>
+          </div>
         </div>
-      ) : (
-        <div class="empty-state compact">
-          <p set:html={t('home.postsEmpty')} />
+        <div class="lg:col-span-7 lg:col-start-6 space-y-8">
+          <p class="text-xl md:text-2xl pf-serif leading-relaxed pf-fade">
+            我相信摄影不是去"捕捉"，而是去"发现"——等待一缕光线、等待一抹情绪、等待一帧瞬间自己潜入镜头。
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-[var(--color-muted)] leading-relaxed pf-fade">
+            <p>
+              从数码摄影开始，到现在的胶片摄影，我始终坚持一种"慢"的方式：少按快门，多看。每一张影像都是发现的结果。
+            </p>
+            <p>
+              {SITE.description} 这里收录我历年的人文、风光与纪实作品，也写下一些关于影像与生活的零散笔记。
+            </p>
+          </div>
+          <div class="flex flex-wrap gap-3 pt-4 pf-fade">
+            <span class="px-4 py-2 border border-[var(--color-line)] rounded-full text-xs tracking-wider">Film</span>
+            <span class="px-4 py-2 border border-[var(--color-line)] rounded-full text-xs tracking-wider">Travel</span>
+            <span class="px-4 py-2 border border-[var(--color-line)] rounded-full text-xs tracking-wider">Humanistic</span>
+            <span class="px-4 py-2 border border-[var(--color-line)] rounded-full text-xs tracking-wider">Documentary</span>
+            <span class="px-4 py-2 border border-[var(--color-line)] rounded-full text-xs tracking-wider">Landscape</span>
+          </div>
         </div>
-      )
-    }
-  </section>
+      </div>
+    </section>
+
+    {/* ============ Works ============ */}
+    <section id="works" class="py-12 md:py-20 px-6 md:px-12">
+      <div class="max-w-[1400px] mx-auto">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+          <div>
+            <div class="text-xs tracking-[.3em] uppercase text-[var(--color-accent)] mb-4">— Selected Works</div>
+            <h2 class="pf-serif text-5xl md:text-7xl leading-none">Portfolio<span class="italic text-[var(--color-accent)]">.</span></h2>
+          </div>
+          <div class="text-[var(--color-muted)] max-w-sm text-sm leading-relaxed">
+            精选作品集。点击任意作品查看大图与详细信息。
+          </div>
+        </div>
+        {
+          works.length > 0 ? (
+            <div class="pf-works" id="pf-works">
+              {works.map((work, i) => (
+                <article
+                  class="pf-card pf-fade"
+                  data-index={i}
+                  data-title={work.data.title}
+                  data-meta={work.data.tech.join(' · ')}
+                  data-year={formatDate(work.data.publishDate, 'short')}
+                  data-href={withBase(`/works/${work.id}/`)}
+                >
+                  {work.data.thumbnail && (
+                    <Image src={work.data.thumbnail} alt={work.data.title} width={1000} height={1000} loading="lazy" />
+                  )}
+                  <div class="pf-corner">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3h7M3 3v7M21 21h-7M21 21v-7M3 3l7 7M21 21l-7-7"/></svg>
+                  </div>
+                  <div class="pf-info">
+                    <div class="text-[10px] tracking-[.3em] opacity-70">{String(i + 1).padStart(2, '0')} / {String(works.length).padStart(2, '0')}</div>
+                    <div class="pf-serif text-2xl md:text-3xl leading-tight">{work.data.title}</div>
+                    <div class="text-xs tracking-[.15em] mt-2 opacity-80">{work.data.tech.join(' · ')} · {formatDate(work.data.publishDate, 'short')}</div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <div class="text-[var(--color-muted)] py-20 text-center">
+              <p set:html={t('home.worksEmpty')} />
+            </div>
+          )
+        }
+      </div>
+    </section>
+
+    {/* ============ Field notes (blog) ============ */}
+    <section id="notes" class="py-24 md:py-32 px-6 md:px-12 border-t border-[var(--color-line)]">
+      <div class="max-w-[1400px] mx-auto">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+          <div>
+            <div class="text-xs tracking-[.3em] uppercase text-[var(--color-accent)] mb-4">— Field notes</div>
+            <h2 class="pf-serif text-5xl md:text-6xl leading-none">Recent <span class="italic">notes.</span></h2>
+          </div>
+          <a href={withBase('/blog/')} class="text-sm tracking-wide text-[var(--color-muted)] hover:text-[var(--color-accent)] transition-colors pf-nav-link">全部文章 →</a>
+        </div>
+        {
+          posts.length > 0 ? (
+            <div class="divide-y divide-[var(--color-line)]">
+              {posts.map((post) => (
+                <a href={withBase(`/blog/${post.id}/`)} class="group flex items-center gap-6 py-6 pf-fade">
+                  <div class="flex-1 min-w-0">
+                    <div class="text-xs tracking-[.2em] uppercase text-[var(--color-muted)] mb-2">{formatDate(post.data.publishDate, 'short')}</div>
+                    <h3 class="pf-serif text-2xl md:text-3xl leading-tight group-hover:text-[var(--color-accent)] transition-colors">{post.data.title}</h3>
+                    <p class="text-[var(--color-muted)] mt-2 line-clamp-1">{post.data.description}</p>
+                  </div>
+                  <span class="text-[var(--color-muted)] group-hover:text-[var(--color-accent)] transition-colors text-xl">→</span>
+                </a>
+              ))}
+            </div>
+          ) : (
+            <div class="text-[var(--color-muted)] py-20 text-center">
+              <p set:html={t('home.postsEmpty')} />
+            </div>
+          )
+        }
+      </div>
+    </section>
+
+    {/* ============ Contact（深色反转） ============ */}
+    <section id="contact" class="py-24 md:py-32 px-6 md:px-12 relative overflow-hidden" style="background:#1a1612;color:#faf8f5;">
+      <div class="pf-contact-bg" style="color:rgba(250,248,245,.03);">PORTFOLIO</div>
+      <div class="max-w-[1400px] mx-auto relative z-10">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+          <div class="lg:col-span-7">
+            <div class="text-xs tracking-[.3em] uppercase text-[var(--color-accent)] mb-6">— Let's work together</div>
+            <h2 class="pf-serif text-5xl md:text-7xl lg:text-[5.5rem] leading-[.95]">
+              Have a story<br>
+              <span class="italic text-[var(--color-accent)]">worth telling?</span>
+            </h2>
+            <a href={`mailto:${contactEmail}`} class="inline-flex items-center gap-4 mt-12 group">
+              <span class="w-16 h-16 rounded-full border border-[#faf8f5]/30 flex items-center justify-center group-hover:bg-[var(--color-accent)] group-hover:border-[var(--color-accent)] transition-colors">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+              </span>
+              <span class="text-2xl md:text-3xl pf-serif">
+                {contactEmail}
+              </span>
+            </a>
+          </div>
+          <div class="lg:col-span-4 lg:col-start-9 grid grid-cols-2 gap-8 self-end">
+            {
+              contactSocials.filter((s) => s.icon !== 'email').map((s) => (
+                <div>
+                  <div class="text-[10px] tracking-[.25em] uppercase text-[#faf8f5]/40 mb-3">{s.label}</div>
+                  <a href={s.href} class="hover:text-[var(--color-accent)] transition-colors text-sm" target={s.href.startsWith('http') ? '_blank' : undefined} rel={s.href.startsWith('http') ? 'noopener noreferrer' : undefined}>
+                    {s.href.replace(/^https?:\/\/[^/]+/, '')}
+                  </a>
+                </div>
+              ))
+            }
+            <div>
+              <div class="text-[10px] tracking-[.25em] uppercase text-[#faf8f5]/40 mb-3">Studio</div>
+              <p class="text-sm leading-relaxed">China<br>By appointment</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  {/* ============ Lightbox ============ */}
+  <div class="pf-lightbox" id="pf-lightbox">
+    <div class="pf-lb-counter" id="pf-lb-counter">01 / 01</div>
+    <button class="pf-lb-btn pf-lb-close" id="pf-lb-close" aria-label="关闭">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <button class="pf-lb-btn pf-lb-prev" id="pf-lb-prev" aria-label="上一张">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <button class="pf-lb-btn pf-lb-next" id="pf-lb-next" aria-label="下一张">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
+    <div class="pf-lightbox-content">
+      <img id="pf-lb-img" src="" alt="">
+      <div class="pf-lightbox-meta">
+        <div>
+          <div class="pf-serif text-2xl md:text-3xl mb-1" id="pf-lb-title"></div>
+          <div class="text-xs tracking-[.2em] uppercase opacity-60" id="pf-lb-meta"></div>
+        </div>
+        <div class="text-xs tracking-[.2em] uppercase opacity-60 text-right" id="pf-lb-year"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 首页交互：自定义光标 + 滚动渐显 + Lightbox
+    // 用 astro:page-load 确保视图切换后重新初始化
+    document.addEventListener('astro:page-load', () => {
+      const home = document.querySelector('.home');
+      if (!home) return;
+
+      // ===== 自定义光标 =====
+      const cursor = document.getElementById('pf-cursor');
+      if (cursor && window.matchMedia('(pointer: fine)').matches) {
+        let mx = 0, my = 0, cx = 0, cy = 0;
+        document.addEventListener('mousemove', (e) => { mx = e.clientX; my = e.clientY; });
+        (function loop() {
+          cx += (mx - cx) * 0.22;
+          cy += (my - cy) * 0.22;
+          cursor.style.left = cx + 'px';
+          cursor.style.top = cy + 'px';
+          requestAnimationFrame(loop);
+        })();
+        home.querySelectorAll('a, button, .pf-nav-link').forEach((el) => {
+          el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+          el.addEventListener('mouseleave', () => cursor.classList.remove('hover', 'view'));
+        });
+        home.querySelectorAll('.pf-card').forEach((el) => {
+          el.addEventListener('mouseenter', () => { cursor.classList.remove('hover'); cursor.classList.add('view'); });
+          el.addEventListener('mouseleave', () => cursor.classList.remove('view'));
+        });
+      }
+
+      // ===== 滚动渐显 =====
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add('in', 'in-view');
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.12 });
+      home.querySelectorAll('.pf-fade, .pf-portrait').forEach((el) => io.observe(el));
+
+      // ===== Lightbox =====
+      const cards = Array.from(home.querySelectorAll<HTMLElement>('.pf-card'));
+      const lb = document.getElementById('pf-lightbox');
+      if (cards.length && lb) {
+        const box: HTMLElement = lb; // 非 null 引用，闭包内安全
+        const lbImg = document.getElementById('pf-lb-img') as HTMLImageElement | null;
+        const lbTitle = document.getElementById('pf-lb-title');
+        const lbMeta = document.getElementById('pf-lb-meta');
+        const lbYear = document.getElementById('pf-lb-year');
+        const lbCounter = document.getElementById('pf-lb-counter');
+        let curIdx = 0;
+
+        function update() {
+          const card = cards[curIdx];
+          const img = card.querySelector<HTMLImageElement>('img');
+          if (lbImg) {
+            lbImg.style.opacity = '0';
+            setTimeout(() => {
+              if (!lbImg) return;
+              lbImg.src = img ? img.src : '';
+              lbImg.alt = card.dataset.title || '';
+              lbImg.style.opacity = '1';
+            }, 200);
+          }
+          if (lbTitle) lbTitle.textContent = card.dataset.title || '';
+          if (lbMeta) lbMeta.textContent = card.dataset.meta || '';
+          if (lbYear) lbYear.textContent = card.dataset.year || '';
+          if (lbCounter) lbCounter.textContent = `${String(curIdx + 1).padStart(2, '0')} / ${String(cards.length).padStart(2, '0')}`;
+        }
+        function open(i: number) {
+          curIdx = i;
+          update();
+          box.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        }
+        function close() {
+          box.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+        function nav(d: number) {
+          curIdx = (curIdx + d + cards.length) % cards.length;
+          update();
+        }
+        cards.forEach((card, i) => {
+          card.addEventListener('click', () => {
+            // 点击角落图标或卡片本身都开灯箱
+            open(i);
+          });
+        });
+        document.getElementById('pf-lb-close')?.addEventListener('click', close);
+        document.getElementById('pf-lb-prev')?.addEventListener('click', () => nav(-1));
+        document.getElementById('pf-lb-next')?.addEventListener('click', () => nav(1));
+        box.addEventListener('click', (e) => { if (e.target === box) close(); });
+        document.addEventListener('keydown', (e) => {
+          if (!box.classList.contains('active')) return;
+          if (e.key === 'Escape') close();
+          if (e.key === 'ArrowLeft') nav(-1);
+          if (e.key === 'ArrowRight') nav(1);
+        });
+      }
+    });
+  </script>
 </BaseLayout>

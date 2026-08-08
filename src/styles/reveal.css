@@ -1,0 +1,15 @@
+/*
+ * reveal.css
+ * ----------------------------------------------------------------
+ * 从 src/pages/index.astro 的 hero 标题中抽出的逐帧动画延迟工具类，
+ * 原先以 inline style="animation-delay:..." 形式写在各 <span> 上。
+ * 提取为外部样式表后，渲染效果与原内联样式完全一致。
+ * 由 index.astro 通过 `import '../styles/reveal.css';` 引入（Astro 会全局打包）。
+ */
+
+/* Hero 标题逐行升起的错峰延迟 */
+.reveal-delay-1 { animation-delay: 0.1s; }
+.reveal-delay-2 { animation-delay: 0.25s; }
+.reveal-delay-3 { animation-delay: 0.4s; }
+.reveal-delay-4 { animation-delay: 0.55s; }
+.reveal-delay-5 { animation-delay: 0.7s; }

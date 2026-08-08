@@ -1,0 +1,321 @@
+	<!DOCTYPE html>
+	<html lang="zh-CN">
+	<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Lin Zhihao — Photography Portfolio</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="ReferenceWebsite.css">
+	</head>
+	<body>
+	<div class="cursor" id="cursor"></div>
+	<!-- 导航 -->
+	<nav class="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-[var(--bg)]/70 border-b border-[var(--border)]">
+	  <div class="max-w-[1400px] mx-auto px-6 md:px-12 py-5 flex justify-between items-center">
+	    <a href="#" class="font-serif text-xl font-medium tracking-tight">
+	      Lin <span class="italic text-[var(--accent)]">Zhihao</span>
+	    </a>
+	    <div class="hidden md:flex gap-10 text-sm font-medium tracking-wide">
+	      <a href="#works" class="nav-link">Works</a>
+	      <a href="#about" class="nav-link">About</a>
+	      <a href="#contact" class="nav-link">Contact</a>
+	    </div>
+	    <a href="#contact" class="text-xs md:text-sm font-medium border border-[var(--fg)] px-4 md:px-5 py-2.5 rounded-full hover:bg-[var(--fg)] hover:text-[var(--bg)] transition-colors">
+	      Get in touch
+	    </a>
+	  </div>
+	</nav>
+	<!-- Hero -->
+	<header class="relative min-h-screen flex items-center pt-28 pb-16 px-6 md:px-12">
+	  <div class="max-w-[1400px] mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+	    <!-- 左侧文字 -->
+	    <div class="lg:col-span-7 relative z-10">
+	      <div class="flex items-center gap-3 mb-8 text-xs tracking-[.25em] uppercase text-[var(--fg-muted)]">
+	        <span class="w-12 h-px bg-[var(--accent)]"></span>
+	        <span>Photographer · Based in Hangzhou</span>
+	      </div>
+	      <h1 class="font-serif text-[13vw] lg:text-[8.2vw] leading-[.9] font-light tracking-tight">
+	        <span class="reveal"><span style="animation-delay:.1s">Capturing</span></span><br>
+	        <span class="reveal"><span style="animation-delay:.25s" class="italic">light,</span></span>
+	        <span class="reveal"><span style="animation-delay:.4s">silence</span></span><br>
+	        <span class="reveal"><span style="animation-delay:.55s">&amp; </span></span>
+	        <span class="reveal"><span style="animation-delay:.7s" class="text-[var(--accent)]">moments.</span></span>
+	      </h1>
+	      <p class="mt-10 max-w-md text-[var(--fg-muted)] leading-relaxed fade-up">
+	        独立摄影师，专注人文纪实与自然风光。七年来走过 23 个国家，用镜头记录那些转瞬即逝的诗意瞬间。相信好的照片是"被看见"的，而非"被拍摄"的。
+	      </p>
+	      <div class="mt-12 flex flex-wrap gap-10 fade-up">
+	        <div>
+	          <div class="font-serif text-4xl"><span class="italic text-[var(--accent)]">07</span></div>
+	          <div class="text-[10px] text-[var(--fg-muted)] mt-1 tracking-[.25em]">YEARS</div>
+	        </div>
+	        <div>
+	          <div class="font-serif text-4xl"><span class="italic text-[var(--accent)]">23</span></div>
+	          <div class="text-[10px] text-[var(--fg-muted)] mt-1 tracking-[.25em]">COUNTRIES</div>
+	        </div>
+	        <div>
+	          <div class="font-serif text-4xl"><span class="italic text-[var(--accent)]">142</span></div>
+	          <div class="text-[10px] text-[var(--fg-muted)] mt-1 tracking-[.25em]">PROJECTS</div>
+	        </div>
+	      </div>
+	    </div>
+	    <!-- 右侧头像 -->
+	    <div class="lg:col-span-5 relative fade-up portrait-wrap">
+	      <div class="aspect-[4/5] max-w-md mx-auto lg:ml-auto overflow-hidden">
+	        <img src="https://picsum.photos/seed/lin-portrait-2024/800/1000.jpg" class="w-full h-full object-cover" alt="摄影师肖像">
+	      </div>
+	      <div class="absolute -bottom-4 -left-2 lg:-left-12 bg-[var(--bg)] px-5 py-3 border-l-2 border-[var(--accent)]">
+	        <div class="text-[10px] text-[var(--fg-muted)] tracking-[.25em]">EST.</div>
+	        <div class="font-serif text-xl">2017</div>
+	      </div>
+	    </div>
+	  </div>
+	  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3">
+	    <span class="text-[10px] tracking-[.3em] uppercase text-[var(--fg-muted)]">Scroll</span>
+	    <div class="scroll-hint"></div>
+	  </div>
+	</header>
+	<!-- 跑马灯 -->
+	<div class="marquee py-6 border-y border-[var(--border)] bg-[var(--bg-soft)]">
+	  <div class="marquee-track font-serif text-3xl md:text-5xl italic font-light">
+	    <span class="mx-8">Available for commissions</span>
+	    <span class="mx-8 text-[var(--accent)]">✦</span>
+	    <span class="mx-8">Editorial · Travel · Portrait</span>
+	    <span class="mx-8 text-[var(--accent)]">✦</span>
+	    <span class="mx-8">Based in Hangzhou, China</span>
+	    <span class="mx-8 text-[var(--accent)]">✦</span>
+	    <span class="mx-8">Available for commissions</span>
+	    <span class="mx-8 text-[var(--accent)]">✦</span>
+	    <span class="mx-8">Editorial · Travel · Portrait</span>
+	    <span class="mx-8 text-[var(--accent)]">✦</span>
+	    <span class="mx-8">Based in Hangzhou, China</span>
+	    <span class="mx-8 text-[var(--accent)]">✦</span>
+	  </div>
+	</div>
+	<!-- About -->
+	<section id="about" class="py-24 md:py-32 px-6 md:px-12">
+	  <div class="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12">
+	    <div class="lg:col-span-4">
+	      <div class="lg:sticky lg:top-32">
+	        <div class="text-xs tracking-[.3em] uppercase text-[var(--accent)] mb-4">— About</div>
+	        <h2 class="font-serif text-5xl md:text-6xl leading-tight">A quiet<br><span class="italic">observer.</span></h2>
+	      </div>
+	    </div>
+	    <div class="lg:col-span-7 lg:col-start-6 space-y-8">
+	      <p class="text-xl md:text-2xl font-serif leading-relaxed fade-up">
+	        我相信摄影不是去"捕捉"，而是去"等待"——等待光线、等待情绪、等待一个瞬间自己显形。
+	      </p>
+	      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-[var(--fg-muted)] leading-relaxed fade-up">
+	        <p>
+	          从胶片暗房开始，到现在的数字工作流，我始终坚持一种"慢"的方式：少按快门，多看。每一张作品都来自数十次的观察与取舍。
+	        </p>
+	        <p>
+	          作品散见于《National Geographic Traveler》《LensCulture》《摄影世界》等刊物。合作客户包括 Airbnb、无印良品、单向空间等。
+	        </p>
+	      </div>
+	      <div class="flex flex-wrap gap-3 pt-4 fade-up">
+	        <span class="px-4 py-2 border border-[var(--border)] rounded-full text-xs tracking-wider">Editorial</span>
+	        <span class="px-4 py-2 border border-[var(--border)] rounded-full text-xs tracking-wider">Travel</span>
+	        <span class="px-4 py-2 border border-[var(--border)] rounded-full text-xs tracking-wider">Portrait</span>
+	        <span class="px-4 py-2 border border-[var(--border)] rounded-full text-xs tracking-wider">Documentary</span>
+	        <span class="px-4 py-2 border border-[var(--border)] rounded-full text-xs tracking-wider">Landscape</span>
+	      </div>
+	    </div>
+	  </div>
+	</section>
+	<!-- Works -->
+	<section id="works" class="py-12 md:py-20 px-6 md:px-12">
+	  <div class="max-w-[1400px] mx-auto">
+	    <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+	      <div>
+	        <div class="text-xs tracking-[.3em] uppercase text-[var(--accent)] mb-4">— Selected Works</div>
+	        <h2 class="font-serif text-5xl md:text-7xl leading-none">Portfolio<span class="italic text-[var(--accent)]">.</span></h2>
+	      </div>
+	      <div class="text-[var(--fg-muted)] max-w-sm text-sm leading-relaxed">
+	        精选 2019—2024 年间的人文、风光与纪实作品。点击任意作品查看大图与详细信息。
+	      </div>
+	    </div>
+	    <div class="works-grid" id="worksGrid"></div>
+	  </div>
+	</section>
+	<!-- Contact -->
+	<section id="contact" class="py-24 md:py-32 px-6 md:px-12 bg-[var(--fg)] text-[var(--bg)] relative overflow-hidden">
+	  <div class="contact-bg">LIN.ZHIHAO</div>
+	  <div class="max-w-[1400px] mx-auto relative z-10">
+	    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+	      <div class="lg:col-span-7">
+	        <div class="text-xs tracking-[.3em] uppercase text-[var(--accent)] mb-6">— Let's work together</div>
+	        <h2 class="font-serif text-5xl md:text-7xl lg:text-[5.5rem] leading-[.95]">
+	          Have a story<br>
+	          <span class="italic text-[var(--accent)]">worth telling?</span>
+	        </h2>
+	        <a href="mailto:hello@linzhihao.photo" class="inline-flex items-center gap-4 mt-12 group">
+	          <span class="w-16 h-16 rounded-full border border-[var(--bg)]/30 flex items-center justify-center group-hover:bg-[var(--accent)] group-hover:border-[var(--accent)] transition-colors">
+	            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+	          </span>
+	          <span class="text-2xl md:text-3xl font-serif">hello@linzhihao.photo</span>
+	        </a>
+	      </div>
+	      <div class="lg:col-span-4 lg:col-start-9 grid grid-cols-2 gap-8 self-end">
+	        <div>
+	          <div class="text-[10px] tracking-[.25em] uppercase text-[var(--bg)]/40 mb-3">Instagram</div>
+	          <a href="#" class="hover:text-[var(--accent)] transition-colors text-sm">@lin.zhihao</a>
+	        </div>
+	        <div>
+	          <div class="text-[10px] tracking-[.25em] uppercase text-[var(--bg)]/40 mb-3">Behance</div>
+	          <a href="#" class="hover:text-[var(--accent)] transition-colors text-sm">/linzhihao</a>
+	        </div>
+	        <div>
+	          <div class="text-[10px] tracking-[.25em] uppercase text-[var(--bg)]/40 mb-3">Phone</div>
+	          <a href="#" class="hover:text-[var(--accent)] transition-colors text-sm">+86 138 0000 0000</a>
+	        </div>
+	        <div>
+	          <div class="text-[10px] tracking-[.25em] uppercase text-[var(--bg)]/40 mb-3">Studio</div>
+	          <p class="text-sm leading-relaxed">Hangzhou, China<br>By appointment</p>
+	        </div>
+	      </div>
+	    </div>
+	  </div>
+	</section>
+	<footer class="py-8 px-6 md:px-12 bg-[var(--fg)] text-[var(--bg)]/60 border-t border-[var(--bg)]/10">
+	  <div class="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-[11px] tracking-wider">
+	    <div>© 2024 LIN ZHIHAO · All photographs are protected by copyright</div>
+	    <div>Designed with intention · Built with care</div>
+	  </div>
+	</footer>
+	<!-- Lightbox -->
+	<div class="lightbox" id="lightbox">
+	  <div class="lb-counter" id="lbCounter">01 / 09</div>
+	  <button class="lb-btn lb-close" id="lbClose" aria-label="关闭">
+	    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+	  </button>
+	  <button class="lb-btn lb-prev" id="lbPrev" aria-label="上一张">
+	    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 18l-6-6 6-6"/></svg>
+	  </button>
+	  <button class="lb-btn lb-next" id="lbNext" aria-label="下一张">
+	    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18l6-6-6-6"/></svg>
+	  </button>
+	  <div class="lightbox-content">
+	    <img id="lbImg" src="" alt="">
+	    <div class="lightbox-meta">
+	      <div>
+	        <div class="font-serif text-2xl md:text-3xl mb-1" id="lbTitle"></div>
+	        <div class="text-xs tracking-[.2em] uppercase opacity-60" id="lbLocation"></div>
+	      </div>
+	      <div class="text-xs tracking-[.2em] uppercase opacity-60 text-right" id="lbYear"></div>
+	    </div>
+	  </div>
+	</div>
+	<script>
+	  // ===== 作品数据 =====
+	  const works = [
+	    {title:'Morning Mist',     location:'Huangshan, China',  year:'2024', seed:'photo-mountain-mist-01'},
+	    {title:'Silent Harbor',    location:'Oslo, Norway',      year:'2023', seed:'photo-harbor-oslo-02'},
+	    {title:'Old Town Light',   location:'Marrakech, Morocco',year:'2023', seed:'photo-marrakech-light-03'},
+	    {title:'Vertical',         location:'Tokyo, Japan',      year:'2024', seed:'photo-tokyo-vertical-04'},
+	    {title:'Desert Lines',     location:'Sahara, Algeria',   year:'2022', seed:'photo-sahara-lines-05'},
+	    {title:"Fisherman's Dawn", location:'Hoi An, Vietnam',   year:'2023', seed:'photo-fisherman-dawn-06'},
+	    {title:'Window Seat',      location:'Iceland',           year:'2024', seed:'photo-iceland-window-07'},
+	    {title:'Quiet Crowd',      location:'Kyoto, Japan',      year:'2023', seed:'photo-kyoto-crowd-08'},
+	    {title:'Last Light',       location:'Patagonia, Chile',  year:'2022', seed:'photo-patagonia-light-09'},
+	  ];
+	  // ===== 渲染作品网格 =====
+	  const grid = document.getElementById('worksGrid');
+	  works.forEach((w,i)=>{
+	    const card = document.createElement('div');
+	    card.className = 'work-card fade-up';
+	    card.style.transitionDelay = `${i*0.05}s`;
+	    card.dataset.index = i;
+	    card.innerHTML = `
+	      <img src="https://picsum.photos/seed/${w.seed}/900/900.jpg" alt="${w.title}" loading="lazy">
+	      <div class="corner">
+	        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3h7M3 3v7M21 21h-7M21 21v-7M3 3l7 7M21 21l-7-7"/></svg>
+	      </div>
+	      <div class="info">
+	        <div class="text-[10px] tracking-[.3em] opacity-70">${String(i+1).padStart(2,'0')} / ${String(works.length).padStart(2,'0')}</div>
+	        <div class="font-serif text-2xl md:text-3xl leading-tight">${w.title}</div>
+	        <div class="text-xs tracking-[.15em] mt-2 opacity-80">${w.location} · ${w.year}</div>
+	      </div>`;
+	    card.addEventListener('click', ()=>openLightbox(i));
+	    grid.appendChild(card);
+	  });
+	  // ===== 自定义光标 =====
+	  const cursor = document.getElementById('cursor');
+	  let mx=0,my=0,cx=0,cy=0;
+	  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+	  (function loop(){
+	    cx += (mx-cx)*.22;
+	    cy += (my-cy)*.22;
+	    cursor.style.left = cx+'px';
+	    cursor.style.top  = cy+'px';
+	    requestAnimationFrame(loop);
+	  })();
+	  document.querySelectorAll('a,button,.nav-link').forEach(el=>{
+	    el.addEventListener('mouseenter',()=>cursor.classList.add('hover'));
+	    el.addEventListener('mouseleave',()=>cursor.classList.remove('hover','view'));
+	  });
+	  document.querySelectorAll('.work-card').forEach(el=>{
+	    el.addEventListener('mouseenter',()=>{cursor.classList.remove('hover');cursor.classList.add('view');});
+	    el.addEventListener('mouseleave',()=>cursor.classList.remove('view'));
+	  });
+	  // ===== 滚动渐显 =====
+	  const io = new IntersectionObserver(entries=>{
+	    entries.forEach(e=>{
+	      if(e.isIntersecting){
+	        e.target.classList.add('in','in-view');
+	        io.unobserve(e.target);
+	      }
+	    });
+	  },{threshold:.12});
+	  document.querySelectorAll('.fade-up,.portrait-wrap').forEach(el=>io.observe(el));
+	  // ===== Lightbox =====
+	  let curIdx = 0;
+	  const lb = document.getElementById('lightbox');
+	  const lbImg = document.getElementById('lbImg');
+	  const lbTitle = document.getElementById('lbTitle');
+	  const lbLocation = document.getElementById('lbLocation');
+	  const lbYear = document.getElementById('lbYear');
+	  const lbCounter = document.getElementById('lbCounter');
+	  function openLightbox(i){
+	    curIdx = i;
+	    updateLightbox();
+	    lb.classList.add('active');
+	    document.body.style.overflow='hidden';
+	  }
+	  function closeLightbox(){
+	    lb.classList.remove('active');
+	    document.body.style.overflow='';
+	  }
+	  function updateLightbox(){
+	    const w = works[curIdx];
+	    lbImg.style.opacity='0';
+	    setTimeout(()=>{
+	      lbImg.src = `https://picsum.photos/seed/${w.seed}/1600/1200.jpg`;
+	      lbImg.alt = w.title;
+	      lbImg.style.opacity='1';
+	    },200);
+	    lbTitle.textContent = w.title;
+	    lbLocation.textContent = w.location;
+	    lbYear.textContent = w.year;
+	    lbCounter.textContent = `${String(curIdx+1).padStart(2,'0')} / ${String(works.length).padStart(2,'0')}`;
+	  }
+	  function nav(d){
+	    curIdx = (curIdx + d + works.length) % works.length;
+	    updateLightbox();
+	  }
+	  document.getElementById('lbClose').addEventListener('click',closeLightbox);
+	  document.getElementById('lbPrev').addEventListener('click',()=>nav(-1));
+	  document.getElementById('lbNext').addEventListener('click',()=>nav(1));
+	  lb.addEventListener('click',e=>{ if(e.target===lb) closeLightbox(); });
+	  document.addEventListener('keydown',e=>{
+	    if(!lb.classList.contains('active')) return;
+	    if(e.key==='Escape') closeLightbox();
+	    if(e.key==='ArrowLeft') nav(-1);
+	    if(e.key==='ArrowRight') nav(1);
+	  });
+	</script>
+	</body>
+	</html>

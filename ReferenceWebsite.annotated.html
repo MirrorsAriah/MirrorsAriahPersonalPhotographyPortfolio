@@ -1,0 +1,930 @@
+<!--
+  ============================================================================
+  注释版文件（ANNOTATED COPY）
+  ----------------------------------------------------------------------------
+  本文件是 ReferenceWebsite.html 的"仅加注释"副本。
+  约束：未修改 / 删除 / 重排 / 重构任何原始代码，仅在代码中新增中文注释。
+  原始逻辑、结构、顺序完全保留，便于逐行对照学习。
+  文件功能概述见文件末尾的"关键逻辑总结"，或配套解析文档。
+  ============================================================================
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- 页面标题：浏览器标签与 SEO 显示名称 -->
+  <title>Lin Zhihao — Photography Portfolio</title>
+  <!-- 通过 CDN 引入 Tailwind CSS：运行时即时生成工具类样式，无需本地构建 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- 预连接 Google Fonts 域名，提前建立 TCP/TLS 连接以加速字体加载 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- 引入两款字体：Fraunces（衬线，用于大标题/数字）/ Manrope（无衬线，正文）。
+	     Fraunces 的 ital,opsz,wght 表示支持斜体、可变光学尺寸、多档字重 -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400&family=Manrope:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    /* ===== 设计令牌（CSS 变量）：集中管理配色，全站通过 var() 复用 ===== */
+    :root {
+      --bg: #faf8f5;
+      /* 暖白米底色 */
+      --bg-soft: #f0ebe4;
+      --bg-warm: #ebe3d7;
+      --fg: #1a1612;
+      /* 近黑暖灰 */
+      --fg-muted: #6b6259;
+      --fg-soft: #948a7e;
+      --accent: #b85c38;
+      /* 赤陶/赭石色 */
+      --accent-dark: #8f4528;
+      --border: #e5dfd5;
+    }
+
+    /* 全局启用字体抗锯齿，使字形边缘更平滑 */
+    * {
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* 锚点跳转与页内滚动启用平滑滚动动画 */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* 页面基础排版：底色、文字色、默认字体、隐藏系统光标（自定义光标用） */
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'Manrope', sans-serif;
+      cursor: none;
+    }
+
+    /* 工具类：衬线字体快捷应用 */
+    .font-serif {
+      font-family: 'Fraunces', serif;
+    }
+
+    /* 噪点纹理增加质感：用内联 SVG（feTurbulence 分形噪声）铺满固定层，极淡叠加 */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+      opacity: .04;
+      mix-blend-mode: multiply;
+    }
+
+    /* 自定义光标：固定定位的小圆点，默认 8px，混合模式 difference 使其在任何底色上都可见 */
+    .cursor {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      background: var(--fg);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      mix-blend-mode: difference;
+      transform: translate(-50%, -50%);
+      transition: width .35s cubic-bezier(.16, 1, .3, 1), height .35s cubic-bezier(.16, 1, .3, 1), background .3s;
+    }
+
+    /* 悬停可点击元素时光标放大为 56px 赤陶色圆 */
+    .cursor.hover {
+      width: 56px;
+      height: 56px;
+      background: var(--accent);
+    }
+
+    /* 悬停作品卡片时光标放大为 88px 并显示 "VIEW" 文字 */
+    .cursor.view {
+      width: 88px;
+      height: 88px;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* 伪元素在光标中心写入 "VIEW" 字样 */
+    .cursor.view::after {
+      content: 'VIEW';
+      color: #fff;
+      font-size: 10px;
+      letter-spacing: .2em;
+      font-weight: 600;
+      mix-blend-mode: normal;
+    }
+
+    /* 移动端（≤768px）恢复系统光标并隐藏自定义光标 */
+    @media (max-width:768px) {
+      body {
+        cursor: auto;
+      }
+
+      .cursor {
+        display: none;
+      }
+    }
+
+    /* 文字逐行升起：外层隐藏溢出，内层初始下移 110%，动画上移归位 */
+    .reveal {
+      overflow: hidden;
+      display: inline-block;
+      vertical-align: top;
+    }
+
+    .reveal>span {
+      display: inline-block;
+      transform: translateY(110%);
+      animation: rise 1.1s cubic-bezier(.16, 1, .3, 1) forwards;
+    }
+
+    /* 定义升起关键帧：终点回到原位 */
+    @keyframes rise {
+      to {
+        transform: translateY(0);
+      }
+    }
+
+    /* 滚动渐显：初始透明+下移 40px，加上 .in 后归位（配合 JS 的 IntersectionObserver） */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 1s cubic-bezier(.16, 1, .3, 1), transform 1s cubic-bezier(.16, 1, .3, 1);
+    }
+
+    .fade-up.in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* 导航 hover 下划线：用 ::after 伪元素从 0 宽过渡到 100% 宽 */
+    .nav-link {
+      position: relative;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--accent);
+      transition: width .4s;
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    /* 头像区：容器相对定位并裁剪溢出；::after 叠加一层斜向渐变增强质感 */
+    .portrait-wrap {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .portrait-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent 55%, rgba(184, 92, 56, .18));
+      pointer-events: none;
+    }
+
+    /* 头像图片默认状态；进入视口(.in-view)时极缓慢放大，形成 Ken Burns 效果 */
+    .portrait-wrap img {
+      transition: transform 8s ease-out;
+    }
+
+    .portrait-wrap.in-view img {
+      transform: scale(1.08);
+    }
+
+    /* 滚动指示竖线：上下渐隐的 1px 线，循环上下浮动 */
+    .scroll-hint {
+      width: 1px;
+      height: 60px;
+      background: linear-gradient(to bottom, transparent, var(--fg) 50%, transparent);
+      animation: hint 2s infinite;
+    }
+
+    @keyframes hint {
+
+      0%,
+      100% {
+        transform: translateY(0);
+        opacity: .3;
+      }
+
+      50% {
+        transform: translateY(10px);
+        opacity: 1;
+      }
+    }
+
+    /* 跑马灯：外层隐藏溢出且不换行；内层轨道 35s 线性无限左移 50%（配合内容复制实现无缝循环） */
+    .marquee {
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .marquee-track {
+      display: inline-block;
+      animation: mar 35s linear infinite;
+    }
+
+    @keyframes mar {
+      to {
+        transform: translateX(-50%);
+      }
+    }
+
+    /* 作品卡片：相对定位+裁剪；图片默认填满并启用 GPU 合成层(will-change) */
+    .work-card {
+      position: relative;
+      overflow: hidden;
+      background: var(--bg-warm);
+    }
+
+    .work-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 1.3s cubic-bezier(.16, 1, .3, 1), filter .6s;
+      will-change: transform;
+    }
+
+    /* hover 时图片轻微放大并压暗，突出信息层 */
+    .work-card:hover img {
+      transform: scale(1.06);
+      filter: brightness(.55);
+    }
+
+    /* 信息层：绝对铺满、底部渐变蒙版、默认透明，hover 时显现 */
+    .work-card .info {
+      position: absolute;
+      inset: 0;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      color: #fff;
+      opacity: 0;
+      transition: opacity .5s;
+      background: linear-gradient(to top, rgba(20, 15, 10, .85) 0%, transparent 55%);
+    }
+
+    .work-card:hover .info {
+      opacity: 1;
+    }
+
+    /* 信息层内三行文字依次上移浮现（用 transition-delay 形成错落） */
+    .work-card .info>div {
+      transform: translateY(20px);
+      transition: transform .7s cubic-bezier(.16, 1, .3, 1);
+    }
+
+    .work-card .info>div:nth-child(2) {
+      transition-delay: .06s;
+    }
+
+    .work-card .info>div:nth-child(3) {
+      transition-delay: .12s;
+    }
+
+    .work-card:hover .info>div {
+      transform: translateY(0);
+    }
+
+    /* 右上角圆形角标：默认缩小透明，hover 时放大显现（图标为对角线箭头） */
+    .work-card .corner {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 32px;
+      height: 32px;
+      border: 1px solid rgba(255, 255, 255, .4);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: scale(.7);
+      transition: all .5s cubic-bezier(.16, 1, .3, 1);
+      color: #fff;
+    }
+
+    .work-card:hover .corner {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* 不规则杂志网格：6 列、自动行高 170px、间距 14px；再用 nth-child 给每张卡片不同跨度拼出拼贴感 */
+    .works-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      grid-auto-rows: 170px;
+      gap: 14px;
+    }
+
+    .work-card:nth-child(1) {
+      grid-column: span 3;
+      grid-row: span 2;
+    }
+
+    .work-card:nth-child(2) {
+      grid-column: span 3;
+      grid-row: span 1;
+    }
+
+    .work-card:nth-child(3) {
+      grid-column: span 2;
+      grid-row: span 1;
+    }
+
+    .work-card:nth-child(4) {
+      grid-column: span 1;
+      grid-row: span 2;
+    }
+
+    .work-card:nth-child(5) {
+      grid-column: span 2;
+      grid-row: span 1;
+    }
+
+    .work-card:nth-child(6) {
+      grid-column: span 3;
+      grid-row: span 2;
+    }
+
+    .work-card:nth-child(7) {
+      grid-column: span 3;
+      grid-row: span 1;
+    }
+
+    .work-card:nth-child(8) {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+
+    .work-card:nth-child(9) {
+      grid-column: span 4;
+      grid-row: span 1;
+    }
+
+    /* 平板（≤1024px）：改为 4 列基础网格，仅少数卡片跨 2 行避免过高 */
+    @media (max-width:1024px) {
+      .works-grid {
+        grid-template-columns: repeat(4, 1fr);
+        grid-auto-rows: 150px;
+      }
+
+      .work-card:nth-child(n) {
+        grid-column: span 2;
+        grid-row: span 1;
+      }
+
+      .work-card:nth-child(1),
+      .work-card:nth-child(6),
+      .work-card:nth-child(8) {
+        grid-row: span 2;
+      }
+    }
+
+    /* 手机（≤640px）：单列纵向堆叠，行高 300px */
+    @media (max-width:640px) {
+      .works-grid {
+        grid-template-columns: 1fr;
+        grid-auto-rows: 300px;
+        gap: 12px;
+      }
+
+      .work-card:nth-child(n) {
+        grid-column: span 1;
+        grid-row: span 1;
+      }
+    }
+
+    /* Lightbox 灯箱：固定铺满、深色半透明背景、默认透明且不可点击，.active 时显现 */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 12, 8, .96);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .5s;
+      backdrop-filter: blur(20px);
+    }
+
+    .lightbox.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* 灯箱内容容器：默认略缩小，激活时放大归位 */
+    .lightbox-content {
+      max-width: 90vw;
+      position: relative;
+      transform: scale(.94);
+      transition: transform .6s cubic-bezier(.16, 1, .3, 1);
+    }
+
+    .lightbox.active .lightbox-content {
+      transform: scale(1);
+    }
+
+    .lightbox img {
+      max-width: 90vw;
+      max-height: 78vh;
+      display: block;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, .6);
+      transition: opacity .35s;
+    }
+
+    /* 灯箱控制按钮（关闭/上一张/下一张）：统一圆形玻璃拟态样式 */
+    .lb-btn {
+      position: fixed;
+      background: rgba(255, 255, 255, .08);
+      border: 1px solid rgba(255, 255, 255, .18);
+      color: #fff;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all .3s;
+      backdrop-filter: blur(10px);
+    }
+
+    .lb-btn:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      transform: scale(1.08);
+    }
+
+    .lb-close {
+      top: 28px;
+      right: 28px;
+    }
+
+    .lb-prev {
+      left: 28px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .lb-next {
+      right: 28px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    /* 左右按钮 hover 时需保留垂直居中位移，故合并 translateY(-50%) 与 scale */
+    .lb-prev:hover,
+    .lb-next:hover {
+      transform: translateY(-50%) scale(1.08);
+    }
+
+    .lb-counter {
+      position: fixed;
+      top: 32px;
+      left: 32px;
+      color: rgba(255, 255, 255, .5);
+      font-size: 11px;
+      letter-spacing: .2em;
+    }
+
+    /* 联系区超大水印字：绝对定位、极低透明度，纯装饰 */
+    .contact-bg {
+      position: absolute;
+      bottom: -4vw;
+      right: -2vw;
+      font-family: 'Fraunces', serif;
+      font-size: 22vw;
+      line-height: .8;
+      color: rgba(250, 248, 245, .03);
+      pointer-events: none;
+      user-select: none;
+      font-weight: 300;
+    }
+
+    /* 自定义滚动条（WebKit）：细窄暖灰色，呼应整体配色 */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--fg-soft);
+    }
+
+    /* 无障碍：用户开启"减弱动画"偏好时，近乎禁用所有动画/过渡 */
+    @media (prefers-reduced-motion:reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 自定义光标 DOM：由 JS 实时更新位置 -->
+  <div class="cursor" id="cursor"></div>
+  <!-- 导航 -->
+  <nav class="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-[var(--bg)]/70 border-b border-[var(--border)]">
+    <div class="max-w-[1400px] mx-auto px-6 md:px-12 py-5 flex justify-between items-center">
+      <!-- 品牌名：Lin 正常 + Zhihao 斜体强调色 -->
+      <a href="#" class="font-serif text-xl font-medium tracking-tight">
+        Lin <span class="italic text-[var(--accent)]">Zhihao</span>
+      </a>
+      <!-- 桌面端导航链接（md 以上显示），hover 出现下划线动画 -->
+      <div class="hidden md:flex gap-10 text-sm font-medium tracking-wide">
+        <a href="#works" class="nav-link">Works</a>
+        <a href="#about" class="nav-link">About</a>
+        <a href="#contact" class="nav-link">Contact</a>
+      </div>
+      <!-- 行动召唤按钮：描边圆角，hover 反色填充 -->
+      <a href="#contact"
+        class="text-xs md:text-sm font-medium border border-[var(--fg)] px-4 md:px-5 py-2.5 rounded-full hover:bg-[var(--fg)] hover:text-[var(--bg)] transition-colors">
+        Get in touch
+      </a>
+    </div>
+  </nav>
+  <!-- Hero -->
+  <header class="relative min-h-screen flex items-center pt-28 pb-16 px-6 md:px-12">
+    <div class="max-w-[1400px] mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+      <!-- 左侧文字 -->
+      <div class="lg:col-span-7 relative z-10">
+        <!-- 小标签：短横线 + "Photographer · Based in Hangzhou" -->
+        <div class="flex items-center gap-3 mb-8 text-xs tracking-[.25em] uppercase text-[var(--fg-muted)]">
+          <span class="w-12 h-px bg-[var(--accent)]"></span>
+          <span>Photographer · Based in Hangzhou</span>
+        </div>
+        <!-- 主标题：拆成多个 reveal 行，逐行延迟升起动画 -->
+        <h1 class="font-serif text-[13vw] lg:text-[8.2vw] leading-[.9] font-light tracking-tight">
+          <span class="reveal"><span style="animation-delay:.1s">Capturing</span></span><br>
+          <span class="reveal"><span style="animation-delay:.25s" class="italic">light,</span></span>
+          <span class="reveal"><span style="animation-delay:.4s">silence</span></span><br>
+          <span class="reveal"><span style="animation-delay:.55s">&amp; </span></span>
+          <span class="reveal"><span style="animation-delay:.7s" class="text-[var(--accent)]">moments.</span></span>
+        </h1>
+        <!-- 简介段落，fade-up 滚动渐显 -->
+        <p class="mt-10 max-w-md text-[var(--fg-muted)] leading-relaxed fade-up">
+          独立摄影师，专注人文纪实与自然风光。七年来走过 23 个国家，用镜头记录那些转瞬即逝的诗意瞬间。相信好的照片是"被看见"的，而非"被拍摄"的。
+        </p>
+        <!-- 数据指标：年数 / 国家数 / 项目数，赤陶色斜体大数字 -->
+        <div class="mt-12 flex flex-wrap gap-10 fade-up">
+          <div>
+            <div class="font-serif text-4xl"><span class="italic text-[var(--accent)]">07</span></div>
+            <div class="text-[10px] text-[var(--fg-muted)] mt-1 tracking-[.25em]">YEARS</div>
+          </div>
+          <div>
+            <div class="font-serif text-4xl"><span class="italic text-[var(--accent)]">23</span></div>
+            <div class="text-[10px] text-[var(--fg-muted)] mt-1 tracking-[.25em]">COUNTRIES</div>
+          </div>
+          <div>
+            <div class="font-serif text-4xl"><span class="italic text-[var(--accent)]">142</span></div>
+            <div class="text-[10px] text-[var(--fg-muted)] mt-1 tracking-[.25em]">PROJECTS</div>
+          </div>
+        </div>
+      </div>
+      <!-- 右侧头像 -->
+      <div class="lg:col-span-5 relative fade-up portrait-wrap">
+        <div class="aspect-[4/5] max-w-md mx-auto lg:ml-auto overflow-hidden">
+          <!-- 占位图来自 picsum.photos，按 seed 固定返回同一张随机图 -->
+          <img src="https://picsum.photos/seed/lin-portrait-2024/800/1000.jpg" class="w-full h-full object-cover"
+            alt="摄影师肖像">
+        </div>
+        <!-- 左下角 EST. 2017 小铭牌 -->
+        <div class="absolute -bottom-4 -left-2 lg:-left-12 bg-[var(--bg)] px-5 py-3 border-l-2 border-[var(--accent)]">
+          <div class="text-[10px] text-[var(--fg-muted)] tracking-[.25em]">EST.</div>
+          <div class="font-serif text-xl">2017</div>
+        </div>
+      </div>
+    </div>
+    <!-- 底部滚动提示 -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3">
+      <span class="text-[10px] tracking-[.3em] uppercase text-[var(--fg-muted)]">Scroll</span>
+      <div class="scroll-hint"></div>
+    </div>
+  </header>
+  <!-- 跑马灯 -->
+  <div class="marquee py-6 border-y border-[var(--border)] bg-[var(--bg-soft)]">
+    <!-- 轨道内容被复制两份（前 5 项 + 后 5 项相同），配合 translateX(-50%) 实现无缝循环 -->
+    <div class="marquee-track font-serif text-3xl md:text-5xl italic font-light">
+      <span class="mx-8">Available for commissions</span>
+      <span class="mx-8 text-[var(--accent)]">✦</span>
+      <span class="mx-8">Editorial · Travel · Portrait</span>
+      <span class="mx-8 text-[var(--accent)]">✦</span>
+      <span class="mx-8">Based in Hangzhou, China</span>
+      <span class="mx-8 text-[var(--accent)]">✦</span>
+      <span class="mx-8">Available for commissions</span>
+      <span class="mx-8 text-[var(--accent)]">✦</span>
+      <span class="mx-8">Editorial · Travel · Portrait</span>
+      <span class="mx-8 text-[var(--accent)]">✦</span>
+      <span class="mx-8">Based in Hangzhou, China</span>
+      <span class="mx-8 text-[var(--accent)]">✦</span>
+    </div>
+  </div>
+  <!-- About -->
+  <section id="about" class="py-24 md:py-32 px-6 md:px-12">
+    <div class="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12">
+      <!-- 左侧标题栏：桌面端 sticky 吸顶 -->
+      <div class="lg:col-span-4">
+        <div class="lg:sticky lg:top-32">
+          <div class="text-xs tracking-[.3em] uppercase text-[var(--accent)] mb-4">— About</div>
+          <h2 class="font-serif text-5xl md:text-6xl leading-tight">A quiet<br><span class="italic">observer.</span>
+          </h2>
+        </div>
+      </div>
+      <!-- 右侧正文：理念段落 + 双栏介绍 + 标签胶囊 -->
+      <div class="lg:col-span-7 lg:col-start-6 space-y-8">
+        <p class="text-xl md:text-2xl font-serif leading-relaxed fade-up">
+          我相信摄影不是去"捕捉"，而是去"等待"——等待光线、等待情绪、等待一个瞬间自己显形。
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-[var(--fg-muted)] leading-relaxed fade-up">
+          <p>
+            从胶片暗房开始，到现在的数字工作流，我始终坚持一种"慢"的方式：少按快门，多看。每一张作品都来自数十次的观察与取舍。
+          </p>
+          <p>
+            作品散见于《National Geographic Traveler》《LensCulture》《摄影世界》等刊物。合作客户包括 Airbnb、无印良品、单向空间等。
+          </p>
+        </div>
+        <!-- 领域标签胶囊 -->
+        <div class="flex flex-wrap gap-3 pt-4 fade-up">
+          <span class="px-4 py-2 border border-[var(--border)] rounded-full text-xs tracking-wider">Editorial</span>
+          <span class="px-4 py-2 border border-[var(--border)] rounded-full text-xs tracking-wider">Travel</span>
+          <span class="px-4 py-2 border border-[var(--border)] rounded-full text-xs tracking-wider">Portrait</span>
+          <span class="px-4 py-2 border border-[var(--border)] rounded-full text-xs tracking-wider">Documentary</span>
+          <span class="px-4 py-2 border border-[var(--border)] rounded-full text-xs tracking-wider">Landscape</span>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Works -->
+  <section id="works" class="py-12 md:py-20 px-6 md:px-12">
+    <div class="max-w-[1400px] mx-auto">
+      <!-- 区块标题 + 说明 -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+        <div>
+          <div class="text-xs tracking-[.3em] uppercase text-[var(--accent)] mb-4">— Selected Works</div>
+          <h2 class="font-serif text-5xl md:text-7xl leading-none">Portfolio<span
+              class="italic text-[var(--accent)]">.</span></h2>
+        </div>
+        <div class="text-[var(--fg-muted)] max-w-sm text-sm leading-relaxed">
+          精选 2019—2024 年间的人文、风光与纪实作品。点击任意作品查看大图与详细信息。
+        </div>
+      </div>
+      <!-- 作品网格容器：卡片由 JS 动态渲染注入 -->
+      <div class="works-grid" id="worksGrid"></div>
+    </div>
+  </section>
+  <!-- Contact -->
+  <section id="contact" class="py-24 md:py-32 px-6 md:px-12 bg-[var(--fg)] text-[var(--bg)] relative overflow-hidden">
+    <!-- 超大装饰水印字 -->
+    <div class="contact-bg">LIN.ZHIHAO</div>
+    <div class="max-w-[1400px] mx-auto relative z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <!-- 左侧：邀约文案 + 邮箱按钮（圆形箭头 hover 变赤陶色） -->
+        <div class="lg:col-span-7">
+          <div class="text-xs tracking-[.3em] uppercase text-[var(--accent)] mb-6">— Let's work together</div>
+          <h2 class="font-serif text-5xl md:text-7xl lg:text-[5.5rem] leading-[.95]">
+            Have a story<br>
+            <span class="italic text-[var(--accent)]">worth telling?</span>
+          </h2>
+          <a href="mailto:hello@linzhihao.photo" class="inline-flex items-center gap-4 mt-12 group">
+            <span
+              class="w-16 h-16 rounded-full border border-[var(--bg)]/30 flex items-center justify-center group-hover:bg-[var(--accent)] group-hover:border-[var(--accent)] transition-colors">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M5 12h14M13 5l7 7-7 7" />
+              </svg>
+            </span>
+            <span class="text-2xl md:text-3xl font-serif">hello@linzhihao.photo</span>
+          </a>
+        </div>
+        <!-- 右侧：社交/联系方式双列 -->
+        <div class="lg:col-span-4 lg:col-start-9 grid grid-cols-2 gap-8 self-end">
+          <div>
+            <div class="text-[10px] tracking-[.25em] uppercase text-[var(--bg)]/40 mb-3">Instagram</div>
+            <a href="#" class="hover:text-[var(--accent)] transition-colors text-sm">@lin.zhihao</a>
+          </div>
+          <div>
+            <div class="text-[10px] tracking-[.25em] uppercase text-[var(--bg)]/40 mb-3">Behance</div>
+            <a href="#" class="hover:text-[var(--accent)] transition-colors text-sm">/linzhihao</a>
+          </div>
+          <div>
+            <div class="text-[10px] tracking-[.25em] uppercase text-[var(--bg)]/40 mb-3">Phone</div>
+            <a href="#" class="hover:text-[var(--accent)] transition-colors text-sm">+86 138 0000 0000</a>
+          </div>
+          <div>
+            <div class="text-[10px] tracking-[.25em] uppercase text-[var(--bg)]/40 mb-3">Studio</div>
+            <p class="text-sm leading-relaxed">Hangzhou, China<br>By appointment</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer class="py-8 px-6 md:px-12 bg-[var(--fg)] text-[var(--bg)]/60 border-t border-[var(--bg)]/10">
+    <div
+      class="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-[11px] tracking-wider">
+      <div>© 2024 LIN ZHIHAO · All photographs are protected by copyright</div>
+      <div>Designed with intention · Built with care</div>
+    </div>
+  </footer>
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <!-- 计数器（如 01 / 09） -->
+    <div class="lb-counter" id="lbCounter">01 / 09</div>
+    <!-- 关闭按钮 SVG：叉号 -->
+    <button class="lb-btn lb-close" id="lbClose" aria-label="关闭">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M18 6L6 18M6 6l12 12" />
+      </svg>
+    </button>
+    <!-- 上一张按钮 SVG：左箭头 -->
+    <button class="lb-btn lb-prev" id="lbPrev" aria-label="上一张">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M15 18l-6-6 6-6" />
+      </svg>
+    </button>
+    <!-- 下一张按钮 SVG：右箭头 -->
+    <button class="lb-btn lb-next" id="lbNext" aria-label="下一张">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M9 18l6-6-6-6" />
+      </svg>
+    </button>
+    <!-- 灯箱内容：大图 + 标题/地点/年份元信息 -->
+    <div class="lightbox-content">
+      <img id="lbImg" src="" alt="">
+      <div class="lightbox-meta">
+        <div>
+          <div class="font-serif text-2xl md:text-3xl mb-1" id="lbTitle"></div>
+          <div class="text-xs tracking-[.2em] uppercase opacity-60" id="lbLocation"></div>
+        </div>
+        <div class="text-xs tracking-[.2em] uppercase opacity-60 text-right" id="lbYear"></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    // ===== 作品数据 =====
+    // 作品数组：每项含标题/地点/年份/seed。seed 用于向 picsum.photos 请求稳定的占位图
+    const works = [
+      { title: 'Morning Mist', location: 'Huangshan, China', year: '2024', seed: 'photo-mountain-mist-01' },
+      { title: 'Silent Harbor', location: 'Oslo, Norway', year: '2023', seed: 'photo-harbor-oslo-02' },
+      { title: 'Old Town Light', location: 'Marrakech, Morocco', year: '2023', seed: 'photo-marrakech-light-03' },
+      { title: 'Vertical', location: 'Tokyo, Japan', year: '2024', seed: 'photo-tokyo-vertical-04' },
+      { title: 'Desert Lines', location: 'Sahara, Algeria', year: '2022', seed: 'photo-sahara-lines-05' },
+      { title: "Fisherman's Dawn", location: 'Hoi An, Vietnam', year: '2023', seed: 'photo-fisherman-dawn-06' },
+      { title: 'Window Seat', location: 'Iceland', year: '2024', seed: 'photo-iceland-window-07' },
+      { title: 'Quiet Crowd', location: 'Kyoto, Japan', year: '2023', seed: 'photo-kyoto-crowd-08' },
+      { title: 'Last Light', location: 'Patagonia, Chile', year: '2022', seed: 'photo-patagonia-light-09' },
+    ];
+    // ===== 渲染作品网格 =====
+    // 取得网格容器；随后遍历作品数组，为每项动态创建一张卡片
+    const grid = document.getElementById('worksGrid');
+    works.forEach((w, i) => {
+      // 创建卡片 div，加上 work-card 与 fade-up 类（用于悬停效果与滚动渐显）
+      const card = document.createElement('div');
+      card.className = 'work-card fade-up';
+      // 错落的渐显延迟：第 i 张卡片延迟 i*0.05s，形成瀑布式出现
+      card.style.transitionDelay = `${i * 0.05}s`;
+      // 记录索引到 dataset，供点击时定位到对应作品
+      card.dataset.index = i;
+      // 用模板字符串拼装卡片内部：缩略图 + 右上角图标 + 底部信息层
+      card.innerHTML = `
+	      <img src="https://picsum.photos/seed/${w.seed}/900/900.jpg" alt="${w.title}" loading="lazy">
+	      <div class="corner">
+	        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3h7M3 3v7M21 21h-7M21 21v-7M3 3l7 7M21 21l-7-7"/></svg>
+	      </div>
+	      <div class="info">
+	        <div class="text-[10px] tracking-[.3em] opacity-70">${String(i + 1).padStart(2, '0')} / ${String(works.length).padStart(2, '0')}</div>
+	        <div class="font-serif text-2xl md:text-3xl leading-tight">${w.title}</div>
+	        <div class="text-xs tracking-[.15em] mt-2 opacity-80">${w.location} · ${w.year}</div>
+	      </div>`;
+      // 点击卡片：以当前索引打开灯箱
+      card.addEventListener('click', () => openLightbox(i));
+      // 将卡片插入网格容器
+      grid.appendChild(card);
+    });
+    // ===== 自定义光标 =====
+    // 取得光标元素；定义鼠标目标坐标(mx,my)与光标实际坐标(cx,cy)
+    const cursor = document.getElementById('cursor');
+    let mx = 0, my = 0, cx = 0, cy = 0;
+    // 监听鼠标移动，记录最新目标坐标
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+    // 缓动跟随循环：每帧让实际坐标按比例逼近目标坐标（产生拖尾/平滑跟随）
+    (function loop () {
+      cx += (mx - cx) * .22;
+      cy += (my - cy) * .22;
+      cursor.style.left = cx + 'px';
+      cursor.style.top = cy + 'px';
+      // 递归请求下一帧，形成持续动画
+      requestAnimationFrame(loop);
+    })();
+    // 给所有链接/按钮/导航项加 hover 态：进入放大光标，离开还原
+    document.querySelectorAll('a,button,.nav-link').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('hover', 'view'));
+    });
+    // 作品卡片单独处理：进入时显示 "VIEW" 大光标（移除 hover、加 view）
+    document.querySelectorAll('.work-card').forEach(el => {
+      el.addEventListener('mouseenter', () => { cursor.classList.remove('hover'); cursor.classList.add('view'); });
+      el.addEventListener('mouseleave', () => cursor.classList.remove('view'));
+    });
+    // ===== 滚动渐显 =====
+    // 交叉观察器：元素进入视口一定比例时触发回调（threshold .12 = 露出 12%）
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          // 加上 in / in-view：触发 fade-up 渐显与头像 Ken Burns 放大
+          e.target.classList.add('in', 'in-view');
+          // 只触发一次，随后停止观察该元素
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: .12 });
+    // 观察所有 fade-up 元素与头像容器
+    document.querySelectorAll('.fade-up,.portrait-wrap').forEach(el => io.observe(el));
+    // ===== Lightbox =====
+    // 当前展示的作品索引（初值 0）
+    let curIdx = 0;
+    // 缓存灯箱各 DOM 引用，避免重复查询
+    const lb = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lbImg');
+    const lbTitle = document.getElementById('lbTitle');
+    const lbLocation = document.getElementById('lbLocation');
+    const lbYear = document.getElementById('lbYear');
+    const lbCounter = document.getElementById('lbCounter');
+    // 打开灯箱：设置当前索引、刷新内容、激活并显示；锁定背景滚动
+    function openLightbox (i) {
+      curIdx = i;
+      updateLightbox();
+      lb.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    // 关闭灯箱：移除激活态、恢复背景滚动
+    function closeLightbox () {
+      lb.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    // 刷新灯箱内容：根据 curIdx 取对应作品，更新图片与元信息
+    function updateLightbox () {
+      const w = works[curIdx];
+      // 先淡出旧图，200ms 后替换 src 再淡入，避免闪烁
+      lbImg.style.opacity = '0';
+      setTimeout(() => {
+        lbImg.src = `https://picsum.photos/seed/${w.seed}/1600/1200.jpg`;
+        lbImg.alt = w.title;
+        lbImg.style.opacity = '1';
+      }, 200);
+      lbTitle.textContent = w.title;
+      lbLocation.textContent = w.location;
+      lbYear.textContent = w.year;
+      // 计数器格式化为两位：01 / 09
+      lbCounter.textContent = `${String(curIdx + 1).padStart(2, '0')} / ${String(works.length).padStart(2, '0')}`;
+    }
+    // 导航到上一张/下一张：d 为 -1 或 1；取模实现循环（首尾相接）
+    function nav (d) {
+      curIdx = (curIdx + d + works.length) % works.length;
+      updateLightbox();
+    }
+    // 绑定按钮事件：关闭、上一张、下一张
+    document.getElementById('lbClose').addEventListener('click', closeLightbox);
+    document.getElementById('lbPrev').addEventListener('click', () => nav(-1));
+    document.getElementById('lbNext').addEventListener('click', () => nav(1));
+    // 点击灯箱背景（非内容区）关闭；用 e.target===lb 判断点到的是遮罩本身
+    lb.addEventListener('click', e => { if (e.target === lb) closeLightbox(); });
+    // 键盘事件：灯箱激活时支持 Esc 关闭、左右方向键切换
+    document.addEventListener('keydown', e => {
+      if (!lb.classList.contains('active')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') nav(-1);
+      if (e.key === 'ArrowRight') nav(1);
+    });
+  </script>
+</body>
+
+</html>
