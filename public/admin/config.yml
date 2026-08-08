@@ -25,9 +25,9 @@ collections:
       - { label: '草稿', name: 'draft', widget: 'boolean', default: false, required: false }
       - { label: '正文', name: 'body', widget: 'markdown' }
 
-  - name: 'projects'
+  - name: 'works'
     label: '项目作品'
-    folder: 'src/content/projects' # 请确保与实际模板的作品目录一致
+    folder: 'src/content/works' # 请确保与实际模板的作品目录一致
     create: true
     slug: '{{slug}}'
     fields:
