@@ -41,13 +41,13 @@ const pageTitle =
 ---
 
 <BaseLayout title={pageTitle} description={t('tag.description', { tag, site: SITE.title })}>
-  <section class="page-head section">
+  <section class="page-head section pf-fade">
     <p class="eyebrow">{t('tag.eyebrow')}</p>
     <h1>{tag}</h1>
     <p class="lead">{t('tag.lead', { tag })}</p>
   </section>
 
-  <section class="section content-index" aria-label={t('tag.listLabel', { tag })}>
+  <section class="section content-index pf-fade" aria-label={t('tag.listLabel', { tag })}>
     <div class="index-sidebar">
       <p class="eyebrow">{t('tag.moreTagsEyebrow')}</p>
       <nav class="tag-cloud" aria-label={t('tag.otherTagsNavLabel')}>

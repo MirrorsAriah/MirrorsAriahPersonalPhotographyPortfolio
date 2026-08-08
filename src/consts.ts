@@ -21,7 +21,7 @@ export const SITE = {
    *  Leave empty ('') to omit the author field. */
   author: 'MirrorsAriah',
   /** Footer credit line. */
-  footerText: '© 2026 Mirrors Ariah. All rights reserved.',
+  footerText: '© 2026 MirrorsAriah. All rights reserved.',
 } as const;
 
 /** Icons bundled with the theme — see `src/components/SocialLinks.astro`. */
