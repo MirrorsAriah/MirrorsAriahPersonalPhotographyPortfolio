@@ -12,7 +12,7 @@ import { zh } from './zh';
 export type { UIKey, UIStrings };
 
 /** Fallback used when `SITE.locale` has no dictionary. */
-export const DEFAULT_LOCALE = 'en';
+export const DEFAULT_LOCALE = 'zh';
 
 /** Registered dictionaries, keyed by BCP 47 language tag. */
 export const DICTIONARIES: Record<string, UIStrings> = { en, ja, zh };
