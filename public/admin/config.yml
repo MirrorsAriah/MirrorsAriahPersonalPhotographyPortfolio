@@ -1,61 +1,45 @@
 backend:
   name: git-gateway
-  branch: main  # 你的 GitHub 默认分支名，可能是 main 或 master
+  branch: main
 
-# 如果你的仓库不是放在 GitHub 账号根下，而是某个组织，下面这行可省略
-# repo: 你的GitHub用户名/仓库名
+media_folder: 'public/images/uploads' # 上传的图片存储位置
+public_folder: '/images/uploads' # 生成的图片访问路径
 
-media_folder: "public/images/uploads" # 上传的图片会存到这个目录
-public_folder: "/images/uploads"      # 构建后图片的访问路径
-
-# 后台界面语言，可设为 zh_CN 显示中文
 locale: 'zh_CN'
 
-# collections:
-#   - name: "blog"          # 集合名称，会显示在后台侧边栏
-#     label: "博客文章"
-#     folder: "src/content/blog"  # 重要！必须和模板存放文章的文件夹一致
-#     create: true          # 允许创建新文章
-#     slug: "{{slug}}"      # 文件名规则，slug 会由标题自动生成
-#     fields:               # 文章的字段定义，请务必对照模板原始 frontmatter 调整
-#       - { label: "标题", name: "title", widget: "string" }
-#       - { label: "发布日期", name: "date", widget: "datetime" }
-#       - { label: "描述", name: "description", widget: "text", required: false }
-#       - { label: "封面图片", name: "image", widget: "image", required: false }
-#       - { label: "正文", name: "body", widget: "markdown" }
-
 collections:
-  - name: "blog"
-    label: "博客文章"
-    folder: "src/content/blog"
+  - name: 'blog'
+    label: '博客文章'
+    folder: 'src/content/blog' # 请确保与实际模板的博客目录一致
     create: true
-    slug: "{{slug}}"
+    slug: '{{slug}}'
     fields:
-      - { label: "标题", name: "title", widget: "string" }
-      - { label: "发布日期", name: "publishDate", widget: "datetime" }
-      - label: "标签"
-        name: "tags"
-        widget: "list"
+      - { label: '标题', name: 'title', widget: 'string' }
+      - { label: '发布日期', name: 'publishDate', widget: 'datetime' }
+      - label: '标签'
+        name: 'tags'
+        widget: 'list'
         default: []
-        field: { label: "标签项", name: "tag", widget: "string" }
-      - { label: "描述", name: "description", widget: "text", required: false }
-      - { label: "草稿", name: "draft", widget: "boolean", default: false }
-      - { label: "正文", name: "body", widget: "markdown" }
-  - name: "projects"
-    label: "项目作品"
-    folder: "src/content/projects"
+        field: { label: '标签项', name: 'tag', widget: 'string' }
+      - { label: '描述', name: 'description', widget: 'text', required: false }
+      - { label: '草稿', name: 'draft', widget: 'boolean', default: false, required: false }
+      - { label: '正文', name: 'body', widget: 'markdown' }
+
+  - name: 'projects'
+    label: '项目作品'
+    folder: 'src/content/projects' # 请确保与实际模板的作品目录一致
     create: true
-    slug: "{{slug}}"
+    slug: '{{slug}}'
     fields:
-      - { label: "标题", name: "title", widget: "string" }
-      - { label: "描述", name: "description", widget: "text" }
-      - { label: "缩略图", name: "thumbnail", widget: "image", required: false }
-      - label: "技术栈"
-        name: "tech"
-        widget: "list"
+      - { label: '标题', name: 'title', widget: 'string' }
+      - { label: '描述', name: 'description', widget: 'text' }
+      - { label: '缩略图', name: 'thumbnail', widget: 'image', required: false }
+      - label: '技术栈'
+        name: 'tech'
+        widget: 'list'
         required: false
-        field: { label: "技术", name: "techItem", widget: "string" }
-      - { label: "项目链接", name: "link", widget: "string", required: false }
-      - { label: "仓库链接", name: "repo", widget: "string", required: false }
-      - { label: "排序", name: "order", widget: "number", required: false, value_type: "int" }
-      - { label: "发布日期", name: "publishDate", widget: "datetime" }
+        field: { label: '技术', name: 'techItem', widget: 'string' }
+      - { label: '项目链接', name: 'link', widget: 'string', required: false }
+      - { label: '仓库链接', name: 'repo', widget: 'string', required: false }
+      - { label: '排序', name: 'order', widget: 'number', required: false, value_type: 'int' }
+      - { label: '发布日期', name: 'publishDate', widget: 'datetime' }
